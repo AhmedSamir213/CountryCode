@@ -149,7 +149,28 @@ open class CountryPicker: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSo
     open static func countryNamesByCode() -> [Country] {
         var countries = [Country]()
         let frameworkBundle = Bundle(for: self)
-        guard let jsonPath = frameworkBundle.path(forResource: "CountryPicker.bundle/Data/countryCodes", ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
+        
+        //edited by me for localization
+        var jsonLocalizationFile : String
+        let defaults:UserDefaults = UserDefaults.standard
+        var isArabic:Bool!
+        let userSavedLanguage:Int = defaults.integer(forKey: "Language")//geting user saved language
+        switch userSavedLanguage {
+        case 1:
+            isArabic = true
+        case 2:
+            isArabic = false
+        default:
+            break
+        }
+        
+        if(isArabic){
+            jsonLocalizationFile = "CountryPicker.bundle/Data/arcountryCodes"
+        }else{
+            jsonLocalizationFile = "CountryPicker.bundle/Data/countryCodes"
+        }
+        
+        guard let jsonPath = frameworkBundle.path(forResource: jsonLocalizationFile, ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
             return countries
         }
         
